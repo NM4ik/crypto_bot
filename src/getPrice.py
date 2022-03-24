@@ -6,6 +6,7 @@ path = '/fapi/v1/ticker/bookTicker'
 url = base + path
 
 
+# request to api
 class GetPrice:
 
     @staticmethod

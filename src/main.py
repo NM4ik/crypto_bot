@@ -6,8 +6,6 @@ from src.getPrice import GetPrice
 
 bot = botApi.GetBot.init_bot()
 
-import datetime
-
 
 # init message
 @bot.message_handler(commands="start")
@@ -15,24 +13,30 @@ def cmd_start(message):
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btc_button = types.InlineKeyboardButton(text="BTC/USDT", callback_data='1')
     eth_button = types.InlineKeyboardButton(text="ETH/USDT", callback_data='2')
+    bnb_button = types.InlineKeyboardButton(text="BNB/USDT", callback_data='2')
 
-    keyboard.add(btc_button, eth_button)
+    keyboard.add(btc_button, eth_button, bnb_button)
     bot.send_message(message.chat.id, 'Select the desired cryptocurrency', reply_markup=keyboard)
 
 
+# respond to the request
 @bot.message_handler(content_types=['text'])
 def answer(message):
     if message.text != 0:
-        crypto = message.text[:3:1]
-        print(crypto+'USDT')
-        data = GetPrice.get_price(crypto+'USDT')
+        try:
+            value = message.text.replace('/', '')
+            data = GetPrice.get_price(value)
 
-        result = formatter(data, message.text)
-        bot.send_message(message.chat.id, result, parse_mode='html')
+            result = formatter(data, message.text)
+            bot.send_message(message.chat.id, result, parse_mode='html')
+        except Exception:
+            bot.send_message(message.chat.id, '<b>There is no such token</b>', parse_mode='html')
+
     else:
         bot.send_message(message.chat.id, 'IT IS ETH')
 
 
+# format output
 def formatter(data, text):
     return f'<b>{text}</b>\nPrice for sale: <b>{data["askPrice"]}</b>\nPurchase price: <b>{data["bidPrice"]}</b>'
 
