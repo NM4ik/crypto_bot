@@ -16,7 +16,7 @@ def cmd_start(message):
     bnb_button = types.InlineKeyboardButton(text="BNB/USDT", callback_data='2')
 
     keyboard.add(btc_button, eth_button, bnb_button)
-    bot.send_message(message.chat.id, 'Select the desired cryptocurrency', reply_markup=keyboard)
+    bot.send_message(message.chat.id, 'Select the desired cryptocurrency or enter a name\n(example = <i>BTC/USDT</i>)', reply_markup=keyboard, parse_mode='html')
 
 
 # respond to the request
